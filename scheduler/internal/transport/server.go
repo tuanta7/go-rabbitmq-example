@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/tuanta7/task-queues/scheduler/internal/transport/rest"
-	"github.com/tuanta7/task-queues/scheduler/web"
+	"github.com/tuanta7/go-rabbitmq-example/scheduler/internal/transport/rest"
+	"github.com/tuanta7/go-rabbitmq-example/scheduler/web"
 )
 
 func NewRouter(imageHandler *rest.UpscaleHandler) http.Handler {

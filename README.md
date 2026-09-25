@@ -1,38 +1,38 @@
-# Image Upscaler
+# go-rabbitmq-example
 
-Learn to implement a task scheduler using RabbitMQ.
+Implement a task scheduler using RabbitMQ.
 
 - RabbitMQ Instance: [CloudAMQP Console](https://api.cloudamqp.com/console/68d88238-d435-41f2-8f44-e69aad890595/details)
-- Postgres Instance: [Neon Console](https://console.neon.tech/app/projects/royal-fog-31827183/branches/br-sparkling-glitter-b3g2xkxg?database=neondb)
+- Postgres + S3 Instance: [Neon Console](https://console.neon.tech/app/projects/royal-fog-31827183/branches/br-sparkling-glitter-b3g2xkxg?database=neondb)
 
 ## Quick Start
 
-Run the worker
+Configure the shared environment file:
 
 ```sh
-
+cp -n .env.example .env
+# Set DATABASE_URL, RABBITMQ_URL, and S3 connection details in .env.
 ```
 
-Run the scheduler
+Install dependencies and run the worker:
 
 ```sh
-
+cd worker
+npm ci
+cd ..
+make start-worker
 ```
 
-Open web UI at `localhost:7031`
+Run the scheduler in another terminal:
+
+```sh
+make start-scheduler
+```
+
+Open the web UI at `localhost:9210` (or the configured `SCHEDULER_BIND_ADDR`).
 
 ## Example Result
 
 Human eyes are much more sensitive to brightness detail than color detail, so the model only upscales the brightness channel; color is upscaled with plain (bicubic) resizing. One channel (Y) instead of three (Y, Cb, Cr) makes the model small and fast.
 
-![demo](./demo.png)
-
-## RabbitMQ vs. Kafka
-
-RabbitMQ is a traditional message broker (smart router) with granular per-message control: ack, nack, requeue, dead-letter, TTL, priority. It pushes messages to consumers and deletes them once acknowledged.
-
-Kafka is a distributed event **streaming platform** (dumb broker). Useful when needing replayable event history, ordering per partition, or multiple independent consumer groups reading the same events.
-
-- Append-only log, messages aren't deleted on consumption (replay is free)
-- Consumers pull from at their own offset.
-- No per-message ack/retry/DLQ/priority/delay.
+![demo](./worker/assets/demo.png)

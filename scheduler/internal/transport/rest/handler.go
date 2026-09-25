@@ -10,7 +10,7 @@ import (
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/tuanta7/task-queues/scheduler/internal/transport/sse"
+	"github.com/tuanta7/go-rabbitmq-example/scheduler/internal/transport/sse"
 )
 
 type UpscaleUC interface {

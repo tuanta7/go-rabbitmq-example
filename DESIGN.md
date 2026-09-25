@@ -19,7 +19,7 @@ flowchart LR
 | Postgres           | Job status store                                                               |
 | MinIO / S3         | Original images and upscaled results                                           |
 | RabbitMQ           | Two durable queues: tasks in, results out                                      |
-| Workers (Python)   | Consume tasks, download → upscale (FSRCNN) → upload, publish status            |
+| Workers (Node.js)   | Consume tasks, download → upscale (FSRCNN) → upload, publish status            |
 
 > [!NOTE]
 > SSE fan-out is in-process (`scheduler/internal/upscale/hub.go`), so it only works with a single

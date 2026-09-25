@@ -11,11 +11,11 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/jackc/pgx/v5"
 	amqp "github.com/rabbitmq/amqp091-go"
-	"github.com/tuanta7/task-queues/scheduler/internal/transport/rest"
+	"github.com/tuanta7/go-rabbitmq-example/scheduler/internal/transport/rest"
 
-	"github.com/tuanta7/task-queues/scheduler/internal/config"
-	"github.com/tuanta7/task-queues/scheduler/internal/transport"
-	"github.com/tuanta7/task-queues/scheduler/internal/upscale"
+	"github.com/tuanta7/go-rabbitmq-example/scheduler/internal/config"
+	"github.com/tuanta7/go-rabbitmq-example/scheduler/internal/transport"
+	"github.com/tuanta7/go-rabbitmq-example/scheduler/internal/upscale"
 )
 
 func main() {
@@ -45,11 +45,11 @@ func main() {
 	}
 	defer channel.Close()
 
-	if err = declareQueue(channel, upscale.TasksQueue); err != nil {
+	if err = declareQueue(channel, cfg.TasksQueue); err != nil {
 		log.Fatalf("declare queue: %v", err)
 	}
 
-	if err = declareQueue(channel, upscale.ResultsQueue); err != nil {
+	if err = declareQueue(channel, cfg.ResultsQueue); err != nil {
 		log.Fatalf("declare results queue: %v", err)
 	}
 
@@ -61,12 +61,12 @@ func main() {
 
 	repo := upscale.NewJobRepository(dbConn)
 	storage := upscale.NewStorage(s3Client, cfg.S3Bucket)
-	uc := upscale.NewUseCase(repo, storage, channel)
+	uc := upscale.NewUseCase(repo, storage, channel, cfg.TasksQueue)
 	handler := rest.NewUpscaleHandler(uc)
 	router := transport.NewRouter(handler)
 
 	go func() {
-		err := consumeResults(conn, func(body []byte) {
+		err := consumeResults(conn, cfg.ResultsQueue, func(body []byte) {
 			var result struct {
 				TaskID string `json:"task_id"`
 				Status string `json:"status"`

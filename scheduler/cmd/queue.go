@@ -4,7 +4,6 @@ import (
 	"log"
 
 	amqp "github.com/rabbitmq/amqp091-go"
-	"github.com/tuanta7/task-queues/scheduler/internal/upscale"
 )
 
 func declareQueue(ch *amqp.Channel, queueName string) error {
@@ -18,7 +17,7 @@ func declareQueue(ch *amqp.Channel, queueName string) error {
 	return err
 }
 
-func consumeResults(conn *amqp.Connection, handler func([]byte)) error {
+func consumeResults(conn *amqp.Connection, resultsQueue string, handler func([]byte)) error {
 	channel, err := conn.Channel()
 	if err != nil {
 		log.Printf("open channel: %v", err)
@@ -26,7 +25,7 @@ func consumeResults(conn *amqp.Connection, handler func([]byte)) error {
 	}
 
 	results, err := channel.Consume(
-		upscale.ResultsQueue, "",
+		resultsQueue, "",
 		true, false, false, false,
 		nil,
 	)

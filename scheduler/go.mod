@@ -1,4 +1,4 @@
-module github.com/tuanta7/task-queues/scheduler
+module github.com/tuanta7/go-rabbitmq-example/scheduler
 
 go 1.26.5
 

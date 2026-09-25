@@ -1,0 +1,20 @@
+{
+  "source": "https://github.com/yjn870/FSRCNN-pytorch",
+  "torch": "2.14.0",
+  "onnx": "1.23.0",
+  "opset": 17,
+  "models": {
+    "2": {
+      "source_sha256": "1af70e2cbf0d11b942008d6c425e469e9fe275a68f3ac8b6c21e8672d6e67b69",
+      "onnx_sha256": "e94959634a7285263f09b42df46efc358d1cb16593fda7dbdf1224cc9982321e"
+    },
+    "3": {
+      "source_sha256": "f65b55819c1258048bc8c1ca96f9e24bd4339f779951d7f928144c08e3868d75",
+      "onnx_sha256": "9185b8dc68c43ad6c34b8379a4b4c835f6e5aa4dbacec7dd8cc7c7afa72f9224"
+    },
+    "4": {
+      "source_sha256": "c15150d6787d487f38a68e66be5ec8a964182403af494e6a935fa03eeb56a630",
+      "onnx_sha256": "72d7d3f3604ab9eea2d075dd345712ed2d448ad3daaf43c4ee301e7749b4f05b"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "upscale-worker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.9.0"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=../.env src/index.js",
+    "upscale": "node --env-file-if-exists=../.env src/cli.js",
+    "format": "prettier --write src package.json README.md",
+    "format:check": "prettier --check src package.json README.md",
+    "try-upscale": "npm run upscale -- assets/images/original.jpg assets/images/upscaled_x3.png --scale 3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.1140.0",
+    "amqplib": "2.0.1",
+    "onnxruntime-node": "1.30.0",
+    "sharp": "0.35.4"
+  },
+  "devDependencies": {
+    "prettier": "3.9.9"
+  }
+}

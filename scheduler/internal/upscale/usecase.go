@@ -9,26 +9,24 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
-const (
-	TasksQueue   = "upscale.tasks"
-	ResultsQueue = "upscale.results"
-)
-
 type UseCase struct {
-	jobRepo   *JobRepository
-	storage   *Storage
-	publisher *amqp.Channel
+	jobRepo    *JobRepository
+	storage    *Storage
+	publisher  *amqp.Channel
+	tasksQueue string
 }
 
 func NewUseCase(
 	jobRepo *JobRepository,
 	storage *Storage,
 	publisher *amqp.Channel,
+	tasksQueue string,
 ) *UseCase {
 	return &UseCase{
-		jobRepo:   jobRepo,
-		storage:   storage,
-		publisher: publisher,
+		jobRepo:    jobRepo,
+		storage:    storage,
+		publisher:  publisher,
+		tasksQueue: tasksQueue,
 	}
 }
 
@@ -67,7 +65,7 @@ func (uc *UseCase) ScheduleTask(ctx context.Context, file []byte, scale int) (st
 		return "", fmt.Errorf("encode task: %w", err)
 	}
 
-	if err := uc.publisher.PublishWithContext(ctx, "", TasksQueue, false, false,
+	if err := uc.publisher.PublishWithContext(ctx, "", uc.tasksQueue, false, false,
 		amqp.Publishing{
 			ContentType: "application/json",
 			Body:        body,
