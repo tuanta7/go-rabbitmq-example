@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
-import { loadModel, upscaleImage } from './upscaler.js';
+import { loadModel, upscaleImage } from './upscaler/index.js';
 
 async function main() {
   const { values, positionals } = parseArgs({

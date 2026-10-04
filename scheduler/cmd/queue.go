@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"time"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )
@@ -17,16 +19,21 @@ func declareQueue(ch *amqp.Channel, queueName string) error {
 	return err
 }
 
-func consumeResults(conn *amqp.Connection, resultsQueue string, handler func([]byte)) error {
+func consumeResults(conn *amqp.Connection, resultsQueue string, handler func([]byte) error) error {
 	channel, err := conn.Channel()
 	if err != nil {
 		log.Printf("open channel: %v", err)
 		return err
 	}
+	defer channel.Close()
+
+	if err := channel.Qos(1, 0, false); err != nil {
+		return fmt.Errorf("set results prefetch: %w", err)
+	}
 
 	results, err := channel.Consume(
 		resultsQueue, "",
-		true, false, false, false,
+		false, false, false, false,
 		nil,
 	)
 	if err != nil {
@@ -35,7 +42,17 @@ func consumeResults(conn *amqp.Connection, resultsQueue string, handler func([]b
 	}
 
 	for msg := range results {
-		handler(msg.Body)
+		if err := handler(msg.Body); err != nil {
+			log.Printf("handle result message: %v", err)
+			if err := msg.Nack(false, true); err != nil {
+				return fmt.Errorf("requeue result message: %w", err)
+			}
+			time.Sleep(time.Second)
+			continue
+		}
+		if err := msg.Ack(false); err != nil {
+			return fmt.Errorf("ack result message: %w", err)
+		}
 	}
 
 	return nil

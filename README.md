@@ -43,4 +43,6 @@ Open the web UI at `localhost:9210` (or the configured `SCHEDULER_BIND_ADDR`).
 
 Human eyes are much more sensitive to brightness detail than color detail, so the model only upscales the brightness channel; color is upscaled with plain (bicubic) resizing. One channel (Y) instead of three (Y, Cb, Cr) makes the model small and fast.
 
+For the upscaler's inputs, outputs, and internal steps, see the [upscaler README](worker/src/upscaler/README.md).
+
 ![demo](./worker/assets/demo.png)

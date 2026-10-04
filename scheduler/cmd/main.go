@@ -66,19 +66,20 @@ func main() {
 	router := transport.NewRouter(handler)
 
 	go func() {
-		err := consumeResults(conn, cfg.ResultsQueue, func(body []byte) {
+		err := consumeResults(conn, cfg.ResultsQueue, func(body []byte) error {
 			var result struct {
 				TaskID string `json:"task_id"`
 				Status string `json:"status"`
 			}
 			if err := json.Unmarshal(body, &result); err != nil {
 				log.Printf("decode result message: %v", err)
-				return
+				return nil
 			}
 			if err := uc.UpdateJobStatus(ctx, result.TaskID, result.Status); err != nil {
-				log.Printf("update job %s status: %v", result.TaskID, err)
+				return err
 			}
 			handler.PublishStatus(result.TaskID, result.Status)
+			return nil
 		})
 		if err != nil {
 			log.Fatalf("consume results queue: %v", err)
