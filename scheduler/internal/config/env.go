@@ -10,7 +10,7 @@ import (
 
 type EnvConfig struct {
 	BindAddr     string `envconfig:"SCHEDULER_BIND_ADDR" default:":9210"`
-	DatabaseURL  string `envconfig:"DATABASE_URL" required:"true"`
+	DatabaseURL  string `envconfig:"POSTGRES_URL" required:"true"`
 	RabbitMQURL  string `envconfig:"RABBITMQ_URL" required:"true"`
 	TasksQueue   string `envconfig:"RABBITMQ_TASK_QUEUE" default:"upscale.tasks"`
 	ResultsQueue string `envconfig:"RABBITMQ_RESULTS_QUEUE" default:"upscale.results"`

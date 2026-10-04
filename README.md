@@ -11,7 +11,7 @@ Configure the shared environment file:
 
 ```sh
 cp -n .env.example .env
-# Set DATABASE_URL, RABBITMQ_URL, and S3 connection details in .env.
+# Set POSTGRES_URL, RABBITMQ_URL, and S3 connection details in .env.
 ```
 
 Install dependencies and run the worker:
@@ -23,11 +23,19 @@ cd ..
 make start-worker
 ```
 
+Apply the database migration before starting the scheduler:
+
+```sh
+make migrate-up
+```
+
 Run the scheduler in another terminal:
 
 ```sh
 make start-scheduler
 ```
+
+To roll back the latest migration, run `make migrate-down`.
 
 Open the web UI at `localhost:9210` (or the configured `SCHEDULER_BIND_ADDR`).
 
